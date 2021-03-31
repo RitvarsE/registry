@@ -7,6 +7,7 @@ namespace App\Repositories\Persons;
 use App\Models\Person;
 use Medoo\Medoo;
 use PDO;
+use PDOStatement;
 
 class MySQLPersonsRepository implements PersonsRepository
 {
@@ -21,9 +22,9 @@ class MySQLPersonsRepository implements PersonsRepository
         ]);
     }
 
-    public function delete(string $person): void
+    public function delete(string $person): PDOStatement
     {
-        $this->database->delete("registry", ['code' => $person]);
+        return $this->database->delete("registry", ['code' => $person]);
     }
 
     public function search(array $person): void
@@ -33,21 +34,21 @@ class MySQLPersonsRepository implements PersonsRepository
 
     public function searchByName(string $name): array
     {
-        return $this->database->select("registry",["name", "code", "age", "address","description"], [
+        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
             "name[~]" => $name
         ]);
     }
 
     public function searchByAge(string $age): array
     {
-        return $this->database->select("registry",["name", "code", "age", "address","description"], [
+        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
             "age" => $age
         ]);
     }
 
     public function searchByAddress(string $address): array
     {
-        return $this->database->select("registry",["name", "code", "age", "address","description"], [
+        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
             "address[~]" => $address
         ]);
     }
@@ -63,8 +64,14 @@ class MySQLPersonsRepository implements PersonsRepository
         ]);
     }
 
-    public function update(array $person): void
+    public function update(array $person): PDOStatement
     {
-        // TODO: Implement update() method.
+        [$id, $note] = $person;
+        return $this->database->update("registry", ['description' => $note], ['code' => $id]);
+    }
+
+    public function hasUser(string $person): bool
+    {
+        return $this->database->has('registry', ["code" => $person]);
     }
 }

@@ -6,14 +6,25 @@ namespace App\Controllers;
 
 use App\Services\Persons\StorePersonRequest;
 use App\Services\Persons\StorePersonService;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
 
 class PersonController
 {
     private StorePersonService $service;
+    private FilesystemLoader $loader;
+    private Environment $twig;
 
     public function __construct(StorePersonService $service)
     {
         $this->service = $service;
+        $this->loader = new FilesystemLoader('../app/Views');
+        $this->twig = new Environment($this->loader, [
+            'auto_reload' => true,
+            'debug' => true,
+        ]);
+        $this->twig->addExtension(new DebugExtension());
     }
 
     public function index(): void
@@ -23,27 +34,27 @@ class PersonController
 
     public function add(): void
     {
-        require_once '../app/Views/AddView.twig';
+        echo $this->twig->render('AddView.twig');
     }
 
     public function delete(): void
     {
-        require_once '../app/Views/DeleteView.php';
+        echo $this->twig->render('DeleteView.twig');
     }
 
     public function search(): void
     {
-        require_once '../app/Views/SearchView.twig';
+        echo $this->twig->render('SearchView.twig');
     }
 
     public function update(): void
     {
-        require_once '../app/Views/UpdateView.twig';
+        echo $this->twig->render('UpdateView.twig');
     }
 
     public function error(): void
     {
-        require_once '../app/Views/errorView.twig';
+        echo $this->twig->render('errorView.twig');
     }
 
     public function addUser(): void
@@ -68,66 +79,81 @@ class PersonController
             && (isset($splittedName[1])
                 && preg_match('/^\p{Latin}+$/u', $splittedName[0])
                 && preg_match('/^\p{Latin}+$/u', $splittedName[1]))
+            && $this->service->hasPerson($_POST['code'])
         ) {
             $this->service->addPerson(new StorePersonRequest($code, $name, $description, $age, $address));
-
+            echo $this->twig->render('successView.twig');
         } else {
-            header('Location: /error');
+            echo $this->twig->render('errorView.twig');
         }
 
     }
 
     public function deleteUser(): void
     {
-    $this->service->deletePerson($_POST['id']);
+        $data = $this->service->deletePerson($_POST['id']);
+        if ($data->rowCount() > 0) {
+            $this->service->deletePerson($_POST['id']);
+            echo $this->twig->render('successView.twig');
+        } else {
+            echo $this->twig->render('NothingView.twig');
+        }
     }
 
     public function updateUser(): void
     {
-
+        $data = $this->service->updatePerson($_POST['data']);
+        if ($data->rowCount() > 0) {
+            $this->service->updatePerson($_POST['data']);
+            echo $this->twig->render('successView.twig');
+        } else {
+            echo $this->twig->render('NothingView.twig');
+        }
     }
 
     public function searchByName(): void
     {
-        require_once '../app/Views/SearchNameView.twig';
+        echo $this->twig->render('SearchNameView.twig');
     }
 
     public function searchByAge(): void
     {
-        require_once '../app/Views/SearchAgeView.twig';
+        echo $this->twig->render('SearchAgeView.twig');
     }
 
     public function searchByAddress(): void
     {
-        require_once '../app/Views/SearchAddressView.twig';
+        echo $this->twig->render('SearchAddressView.twig');
     }
+
     public function foundByName(): void
     {
         $persons = $this->service->findPersonByName($_POST['name']);
-        require_once '../app/Views/foundPersons.php';
+        if (empty($persons)) {
+            echo $this->twig->render('NothingView.twig');
+        } else {
+            echo $this->twig->render('foundPersons.twig', ['persons' => $persons]);
+        }
 
     }
-    public function foundByAge():void
+
+    public function foundByAge(): void
     {
         $persons = $this->service->findPersonByAge($_POST['age']);
-        require_once '../app/Views/foundPersons.php';
+        if (empty($persons)) {
+            echo $this->twig->render('NothingView.twig');
+        } else {
+            echo $this->twig->render('foundPersons.twig', ['persons' => $persons]);
+        }
     }
-    public function foundByAddress():void
+
+    public function foundByAddress(): void
     {
         $persons = $this->service->findPersonByAddress($_POST['address']);
-        require_once '../app/Views/foundPersons.php';
-    }
-    public function store(): string
-    {
-        //validation for $_POST;
-        $person = $this->service->addPerson(
-            new StorePersonRequest(
-                $_POST['code'],
-                $_POST['name'],
-                $_POST['description'],
-                $_POST['age'],
-                $_POST['address']
-            ));
-        return json_encode($person->toArray(), JSON_THROW_ON_ERROR);
+        if (empty($persons)) {
+            echo $this->twig->render('NothingView.twig');
+        } else {
+            echo $this->twig->render('foundPersons.twig', ['persons' => $persons]);
+        }
     }
 }

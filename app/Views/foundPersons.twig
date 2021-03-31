@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<h1 class="ml-5">Members</h1>
+<table class="ml-5 table-auto border-4 border-light-blue-500 border-opacity-100">
+    <tr>
+        <td class="m-8 border-4 border-light-blue-500 border-opacity-100">Name</td>
+        <td class="m-8 border-4 border-light-blue-500 border-opacity-100">Person code</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">Age</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">Address</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">Description</td>
+    </tr>
+    {% for person in persons %}
+    <tr>
+            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.name }}</td>
+            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.code }}</td>
+            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.age }}</td>
+            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.address }}</td>
+            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.description }}</td>
+        {% endfor %}
+    </tr>
+    <?php endforeach; ?>
+</table>
+</body>
+</html>

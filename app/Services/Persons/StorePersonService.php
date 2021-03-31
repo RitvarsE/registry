@@ -6,6 +6,7 @@ namespace App\Services\Persons;
 
 use App\Models\Person;
 use App\Repositories\Persons\PersonsRepository;
+use PDOStatement;
 
 class StorePersonService
 {
@@ -43,8 +44,19 @@ class StorePersonService
     {
         return $this->personsRepository->searchByAddress($request);
     }
-    public function deletePerson(string $request): void
+
+    public function deletePerson(string $request): PDOStatement
     {
-        $this->personsRepository->delete($request);
+        return $this->personsRepository->delete($request);
+    }
+
+    public function updatePerson(array $request): PDOStatement
+    {
+        return $this->personsRepository->update($request);
+    }
+
+    public function hasPerson(string $request): bool
+    {
+        return $this->personsRepository->hasUser($request);
     }
 }

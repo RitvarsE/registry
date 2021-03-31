@@ -13,7 +13,6 @@ require_once '../vendor/autoload.php';
 //Twig
 $loader = new FilesystemLoader('../app/Views');
 $twig = new Environment($loader, [
-    'cache' => '../app/cache',
     'auto_reload' => true,
 ]);
 echo $twig->render('header.twig');
