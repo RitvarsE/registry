@@ -3,7 +3,6 @@
 use App\Controllers\PersonController;
 use App\Repositories\Persons\MySQLPersonsRepository;
 use App\Repositories\Persons\PersonsRepository;
-use App\Services\Persons\StorePersonRequest;
 use App\Services\Persons\StorePersonService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -15,7 +14,7 @@ $loader = new FilesystemLoader('../app/Views');
 $twig = new Environment($loader, [
     'auto_reload' => true,
 ]);
-echo $twig->render('header.twig');
+echo $twig->render('HeaderView.twig');
 
 //Container
 $container = new League\Container\Container;

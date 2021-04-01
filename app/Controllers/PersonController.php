@@ -27,17 +27,17 @@ class PersonController
         $this->twig->addExtension(new DebugExtension());
     }
 
-    public function index(): void
+    public function index(): string
     {
-
+        return $this->twig->render('HomeView.twig');
     }
 
-    public function add(): void
+    public function add(): string
     {
-        echo $this->twig->render('AddView.twig');
+        return $this->twig->render('AddView.twig');
     }
 
-    public function addUser(): void
+    public function addUser(): string
     {
         $name = mb_strtolower($_POST['name'], 'UTF-8');
         $code = $_POST['code'];
@@ -54,43 +54,43 @@ class PersonController
             && !$this->service->hasPerson($code, 'code')
         ) {
             $person = $this->service->addPerson(new StorePersonRequest($code, $name, $description, $age, $address));
-            echo $this->twig->render('successView.twig', ['operation' => 'added', 'person' => [$person->toArray()]]);
-        } else {
-            echo $this->twig->render('errorView.twig');
+            return $this->twig->render('SuccessView.twig', ['operation' => 'added', 'person' => [$person->toArray()]]);
         }
 
+        return $this->twig->render('ErrorView.twig');
+
     }
 
-    public function delete(): void
+    public function delete(): string
     {
-        echo $this->twig->render('DeleteView.twig');
+        return $this->twig->render('DeleteView.twig');
     }
 
-    public function deleteUser(): void
+    public function deleteUser(): string
     {
         $request = $_POST['id'];
 
         if ($this->service->hasPerson($request, 'code')) {
             $person = $this->service->findPerson($request, 'code');
             $this->service->deletePerson($request);
-            echo $this->twig->render('successView.twig', ['operation' => 'deleted', 'person' => $person]);
-        } else {
-            echo $this->twig->render('NothingView.twig');
+            return $this->twig->render('SuccessView.twig', ['operation' => 'deleted', 'person' => $person]);
         }
+
+        return $this->twig->render('NothingView.twig');
     }
 
-    public function search(): void
+    public function search(): string
     {
-        echo $this->twig->render('SearchByView.twig');
+        return $this->twig->render('SearchByView.twig');
     }
 
-    public function searchUser(): void
+    public function searchUser(): string
     {
         $type = $_POST['type'];
-        echo $this->twig->render('searchView.twig', ['type' => $type]);
+        return $this->twig->render('SearchView.twig', ['type' => $type]);
     }
 
-    public function findPersons(): void
+    public function findPersons(): string
     {
         $type = $_POST['type'];
         $request = mb_strtolower($_POST['search'], 'UTF-8');
@@ -102,18 +102,18 @@ class PersonController
         $persons = $this->service->findPerson($request, $type);
 
         if ($this->service->hasPerson($request, $type)) {
-            echo $this->twig->render('foundPersons.twig', ['persons' => $persons]);
-        } else {
-            echo $this->twig->render('NothingView.twig');
+            return $this->twig->render('FoundPersons.twig', ['persons' => $persons]);
         }
+
+        return $this->twig->render('NothingView.twig');
     }
 
-    public function update(): void
+    public function update(): string
     {
-        echo $this->twig->render('UpdateView.twig');
+        return $this->twig->render('UpdateView.twig');
     }
 
-    public function updateUser(): void
+    public function updateUser(): string
     {
         [$request, $note] = $_POST['data'];
 
@@ -124,15 +124,15 @@ class PersonController
         if ($this->service->hasPerson($request, 'code')) {
             $this->service->updatePerson($_POST['data']);
             $person = $this->service->findPerson($request, 'code');
-            echo $this->twig->render('successView.twig', ['operation' => 'updated', 'person' => $person]);
-        } else {
-            echo $this->twig->render('NothingView.twig');
+            return $this->twig->render('SuccessView.twig', ['operation' => 'updated', 'person' => $person]);
         }
+
+        return $this->twig->render('NothingView.twig');
     }
 
-    public function error(): void
+    public function error(): string
     {
-        echo $this->twig->render('errorView.twig');
+        return $this->twig->render('ErrorView.twig');
     }
 
     public function validID(string $id): bool
@@ -179,6 +179,6 @@ class PersonController
     public function printAllPersons(): void
     {
         $persons = $this->service->printAllPersons();
-        echo $this->twig->render('allPersonsView.twig', ['persons' => $persons]);
+        echo $this->twig->render('AllPersonsView.twig', ['persons' => $persons]);
     }
 }
