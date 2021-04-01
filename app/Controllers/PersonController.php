@@ -48,7 +48,8 @@ class PersonController
         if ($this->validID($_POST['code'])) {
             $code = $this->validateID($_POST['code']);
         }
-        if ($this->validID($code)
+        if (isset($name, $code, $age, $address)
+            && $this->validID($code)
             && $this->validAge($age)
             && $this->validName($name)
             && !$this->service->hasPerson($code, 'code')
@@ -122,7 +123,7 @@ class PersonController
         }
 
         if ($this->service->hasPerson($request, 'code')) {
-            $this->service->updatePerson($_POST['data']);
+            $this->service->updatePerson([$request, $note]);
             $person = $this->service->findPerson($request, 'code');
             return $this->twig->render('SuccessView.twig', ['operation' => 'updated', 'person' => $person]);
         }

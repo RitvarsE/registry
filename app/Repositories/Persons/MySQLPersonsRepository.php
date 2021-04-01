@@ -3,12 +3,9 @@
 
 namespace App\Repositories\Persons;
 
-
-use Tests\Person;
 use Medoo\Medoo;
 use PDO;
 use PDOStatement;
-use function PHPUnit\Framework\throwException;
 
 class MySQLPersonsRepository implements PersonsRepository
 {
@@ -88,8 +85,9 @@ class MySQLPersonsRepository implements PersonsRepository
         }
         return false;
     }
+
     public function printAllPersons(): array
     {
-        return $this->database->select('registry',["name", "code", "age", "address", "description"]);
+        return $this->database->select('registry', ["name", "code", "age", "address", "description"]);
     }
 }
