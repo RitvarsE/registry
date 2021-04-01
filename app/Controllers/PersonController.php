@@ -176,9 +176,9 @@ class PersonController
         return $id;
     }
 
-    public function printAllPersons(): void
+    public function printAllPersons(): string
     {
         $persons = $this->service->printAllPersons();
-        echo $this->twig->render('AllPersonsView.twig', ['persons' => $persons]);
+        return $this->twig->render('AllPersonsView.twig', ['persons' => $persons]);
     }
 }
