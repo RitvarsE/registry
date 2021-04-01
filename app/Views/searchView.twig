@@ -1,10 +1,10 @@
 <html lang="en">
 <body>
-<h2 class="ml-10">Search by:</h2>
-<form method="get">
-<button type="submit" formaction="/searchname" formmethod="GET" class="ml-10 bg-green-200 hover:bg-red-700 p-2">Name</button>
-<button type="submit" formaction="/searchage" formmethod="GET" class=" bg-green-200 hover:bg-red-700 p-2">Age</button>
-<button type="submit" formaction="/searchaddress" formmethod="GET" class=" bg-green-200 hover:bg-red-700 p-2">Address</button>
+<form method="post">
+    <label for="search" class="ml-9">Search by {{ type }}:</label>
+    <input type="text" id="search" name="search" class="bg-gray-200 focus:bg-white border-2 border-red-500 "><br><br>
+    <input type="hidden" name="type" value="{{ type }}"/>
+    <button type="submit" formaction="/found" class="ml-32 bg-red-500 hover:bg-red-700 p-2">Submit</button>
 </form>
 </body>
 </html>

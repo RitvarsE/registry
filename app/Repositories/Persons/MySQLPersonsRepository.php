@@ -4,10 +4,11 @@
 namespace App\Repositories\Persons;
 
 
-use App\Models\Person;
+use Tests\Person;
 use Medoo\Medoo;
 use PDO;
 use PDOStatement;
+use function PHPUnit\Framework\throwException;
 
 class MySQLPersonsRepository implements PersonsRepository
 {
@@ -27,30 +28,31 @@ class MySQLPersonsRepository implements PersonsRepository
         return $this->database->delete("registry", ['code' => $person]);
     }
 
-    public function search(array $person): void
+    public function search(string $request, string $type): ?array
     {
-        // TODO: Implement search() method.
-    }
+        if ($type === 'name') {
+            return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
+                "name[~]" => $request
+            ]);
+        }
 
-    public function searchByName(string $name): array
-    {
-        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
-            "name[~]" => $name
-        ]);
-    }
+        if ($type === 'age') {
+            return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
+                "age" => $request
+            ]);
+        }
 
-    public function searchByAge(string $age): array
-    {
-        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
-            "age" => $age
-        ]);
-    }
-
-    public function searchByAddress(string $address): array
-    {
-        return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
-            "address[~]" => $address
-        ]);
+        if ($type === 'address') {
+            return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
+                "address[~]" => $request
+            ]);
+        }
+        if ($type === 'code') {
+            return $this->database->select("registry", ["name", "code", "age", "address", "description"], [
+                "code" => $request
+            ]);
+        }
+        return null;
     }
 
     public function add(array $person): void
@@ -70,8 +72,24 @@ class MySQLPersonsRepository implements PersonsRepository
         return $this->database->update("registry", ['description' => $note], ['code' => $id]);
     }
 
-    public function hasUser(string $person): bool
+    public function hasUser(string $request, string $type): bool
     {
-        return $this->database->has('registry', ["code" => $person]);
+        if ($type === 'name') {
+            return $this->database->has('registry', ["name[~]" => $request]);
+        }
+        if ($type === 'age') {
+            return $this->database->has('registry', ["age" => $request]);
+        }
+        if ($type === 'address') {
+            return $this->database->has('registry', ["address[~]" => $request]);
+        }
+        if ($type === 'code') {
+            return $this->database->has('registry', ["code" => $request]);
+        }
+        return false;
+    }
+    public function printAllPersons(): array
+    {
+        return $this->database->select('registry',["name", "code", "age", "address", "description"]);
     }
 }

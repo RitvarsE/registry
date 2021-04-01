@@ -34,15 +34,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/delete', [PersonController::class, 'deleteUser']);
     $r->addRoute('GET', '/update', [PersonController::class, 'update']);
     $r->addRoute('POST', '/update', [PersonController::class, 'updateUser']);
-    $r->addRoute('GET', '/search', [PersonController::class, 'search']);
+    $r->addRoute('GET', '/searchby', [PersonController::class, 'search']);
     $r->addRoute('POST', '/search', [PersonController::class, 'searchUser']);
+    $r->addRoute('POST', '/found', [PersonController::class, 'findPersons']);
     $r->addRoute('GET', '/error', [PersonController::class, 'error']);
-    $r->addRoute('GET', '/searchname', [PersonController::class, 'searchByName']);
-    $r->addRoute('GET', '/searchage', [PersonController::class, 'searchByAge']);
-    $r->addRoute('GET', '/searchaddress', [PersonController::class, 'searchByAddress']);
-    $r->addRoute('POST', '/searchname', [PersonController::class, 'foundByName']);
-    $r->addRoute('POST', '/searchage', [PersonController::class, 'foundByAge']);
-    $r->addRoute('POST', '/searchaddress', [PersonController::class, 'foundByAddress']);
+    $r->addRoute('GET', '/all', [PersonController::class, 'printAllPersons']);
 });
 
 // Fetch method and URI from somewhere

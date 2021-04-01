@@ -30,19 +30,9 @@ class StorePersonService
         return $person;
     }
 
-    public function findPersonByName(string $request): array
+    public function findPerson(string $request, string $type): array
     {
-        return $this->personsRepository->searchByName($request);
-    }
-
-    public function findPersonByAge(string $request): array
-    {
-        return $this->personsRepository->searchByAge($request);
-    }
-
-    public function findPersonByAddress(string $request): array
-    {
-        return $this->personsRepository->searchByAddress($request);
+        return $this->personsRepository->search($request, $type);
     }
 
     public function deletePerson(string $request): PDOStatement
@@ -55,8 +45,12 @@ class StorePersonService
         return $this->personsRepository->update($request);
     }
 
-    public function hasPerson(string $request): bool
+    public function hasPerson(string $request, string $type): bool
     {
-        return $this->personsRepository->hasUser($request);
+        return $this->personsRepository->hasUser($request, $type);
+    }
+    public function printAllPersons(): array
+    {
+        return $this->personsRepository->printAllPersons();
     }
 }

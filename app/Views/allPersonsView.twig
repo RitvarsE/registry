@@ -12,11 +12,11 @@
     </tr>
     {% for person in persons %}
     <tr>
-            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.name|title }}</td>
-            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.code[0:6]}}-{{ person.code[6:12] }}</td>
-            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.age }}</td>
-            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.address|capitalize }}</td>
-            <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.description }}</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.name|title }}</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.code[0:6]}}-{{ person.code[6:12] }}</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.age }}</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.address|capitalize }}</td>
+        <td class="border-4 border-light-blue-500 border-opacity-100">{{ person.description }}</td>
         {% endfor %}
     </tr>
     <?php endforeach; ?>
