@@ -13,7 +13,7 @@ class MySQLPersonsRepository implements PersonsRepository
 
     public function __construct()
     {
-        $pdo = new PDO('mysql:dbname=registry;host=localhost', 'root', 'kartupelis');
+        $pdo = new PDO('mysql:dbname=registry;host=localhost', 'root', '');
         $this->database = new Medoo([
             'pdo' => $pdo,
             'database_type' => 'mysql'
