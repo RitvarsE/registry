@@ -3,7 +3,10 @@
 use App\Controllers\PersonController;
 use App\Repositories\Persons\MySQLPersonsRepository;
 use App\Repositories\Persons\PersonsRepository;
+use App\Repositories\Token\MySQLTokenRepository;
+use App\Repositories\Token\TokenRepository;
 use App\Services\Persons\StorePersonService;
+use App\Services\Token\TokenPersonService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -21,8 +24,12 @@ $container = new League\Container\Container;
 $container->add(PersonsRepository::class, MySQLPersonsRepository::class);
 $container->add(StorePersonService::class, StorePersonService::class)
     ->addArgument(PersonsRepository::class);
+$container->add(TokenRepository::class, MySQLTokenRepository::class);
+$container->add(TokenPersonService::class, TokenPersonService::class)
+    ->addArgument(TokenRepository::class);
 $container->add(PersonController::class, PersonController::class)
-    ->addArgument(StorePersonService::class);
+    ->addArguments([StorePersonService::class, TokenPersonService::class]);
+
 
 //Routes
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
@@ -38,6 +45,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/found', [PersonController::class, 'findPersons']);
     $r->addRoute('GET', '/error', [PersonController::class, 'error']);
     $r->addRoute('GET', '/all', [PersonController::class, 'printAllPersons']);
+    $r->addRoute('GET', '/login', [PersonController::class, 'login']);
+    $r->addRoute('POST', '/login', [PersonController::class, 'loginauth']);
 });
 
 // Fetch method and URI from somewhere

@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+{% if auth == false %}
+<form method="get" target="_self">
+    <label for="id" class="ml-9">Id</label>
+    <input type="text" id="id" name="id" class="bg-gray-200 focus:bg-white border-2 border-red-500 "><br><br>
+    <button type="submit" formmethod="post" class="ml-32 bg-red-500 hover:bg-red-700 p-2">Submit</button>
+</form>
+</body>
+{% else %}
+    <form method="get" target="_self">
+        <label for="token" class="ml-9">Token</label>
+        <input type="text" id="token" name="token" class="bg-gray-200 focus:bg-white border-2 border-red-500 "><br><br>
+        <button type="submit" formmethod="post" formaction="/dashboard" class="ml-32 bg-red-500 hover:bg-red-700 p-2">Submit</button>
+    </form>
+    </body>
+{% endif %}
+</html>

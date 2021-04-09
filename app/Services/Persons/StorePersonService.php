@@ -53,4 +53,8 @@ class StorePersonService
     {
         return $this->personsRepository->printAllPersons();
     }
+    public function addToken(string $request, string $token): void
+    {
+        $this->personsRepository->addToken($request, $token);
+    }
 }

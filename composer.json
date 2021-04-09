@@ -12,7 +12,8 @@
     "league/container": "^3.3",
     "catfan/medoo": "^1.7",
     "ext-pdo": "*",
-    "twig/twig": "^3.0"
+    "twig/twig": "^3.0",
+    "spomky-labs/otphp": "^10.0"
   }
   ,
   "require-dev": {

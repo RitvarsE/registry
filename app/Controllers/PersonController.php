@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Services\Persons\StorePersonRequest;
 use App\Services\Persons\StorePersonService;
+use App\Services\Token\TokenPersonService;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -15,9 +16,11 @@ class PersonController
     private StorePersonService $service;
     private FilesystemLoader $loader;
     private Environment $twig;
+    private TokenPersonService $tokenService;
 
-    public function __construct(StorePersonService $service)
+    public function __construct(StorePersonService $service, TokenPersonService $tokenService)
     {
+        $this->tokenService = $tokenService;
         $this->service = $service;
         $this->loader = new FilesystemLoader('../app/Views');
         $this->twig = new Environment($this->loader, [
@@ -25,6 +28,26 @@ class PersonController
             'debug' => true,
         ]);
         $this->twig->addExtension(new DebugExtension());
+    }
+
+    public function login(): string
+    {
+        return $this->twig->render('LoginFormView.twig', ['auth' => false]);
+    }
+
+    public function loginauth(): string
+    {
+        if ($this->service->hasPerson($_POST['id'], 'code') && !$this->tokenService->checkToken($_POST['id'])) {
+            $this->tokenService->addToken([$_POST['id'], $this->tokenService->createToken()]);
+            return $this->twig->render('LoginFormView.twig', ['auth' => true]);
+        } else {
+            return 123;
+        }
+    }
+
+    public function dashboard(): string
+    {
+
     }
 
     public function index(): string
