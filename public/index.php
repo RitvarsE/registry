@@ -5,8 +5,10 @@ use App\Repositories\Persons\MySQLPersonsRepository;
 use App\Repositories\Persons\PersonsRepository;
 use App\Repositories\Token\MySQLTokenRepository;
 use App\Repositories\Token\TokenRepository;
+use App\Services\Main\MainService;
 use App\Services\Persons\StorePersonService;
 use App\Services\Token\TokenPersonService;
+use App\Services\Twig\TwigService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -27,13 +29,16 @@ $container->add(StorePersonService::class, StorePersonService::class)
 $container->add(TokenRepository::class, MySQLTokenRepository::class);
 $container->add(TokenPersonService::class, TokenPersonService::class)
     ->addArgument(TokenRepository::class);
+$container->add(TwigService::class, TwigService::class);
+$container->add(MainService::class, MainService::class)
+    ->addArguments([StorePersonService::class, TokenPersonService::class, TwigService::class]);
 $container->add(PersonController::class, PersonController::class)
-    ->addArguments([StorePersonService::class, TokenPersonService::class]);
+    ->addArgument(MainService::class);
 
 
 //Routes
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/', [PersonController::class, 'index']);
+    $r->addRoute(['GET', 'POST'], '/', [PersonController::class, 'index']);
     $r->addRoute('GET', '/add', [PersonController::class, 'add']);
     $r->addRoute('POST', '/add', [PersonController::class, 'addUser']);
     $r->addRoute('GET', '/delete', [PersonController::class, 'delete']);
@@ -47,6 +52,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/all', [PersonController::class, 'printAllPersons']);
     $r->addRoute('GET', '/login', [PersonController::class, 'login']);
     $r->addRoute('POST', '/login', [PersonController::class, 'loginauth']);
+    $r->addRoute('POST', '/loginverify', [PersonController::class, 'loginVerify']);
+    $r->addRoute(['POST', 'GET'], '/dashboard', [PersonController::class, 'dashboard']);
 });
 
 // Fetch method and URI from somewhere

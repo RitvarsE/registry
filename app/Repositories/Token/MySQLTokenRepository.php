@@ -4,7 +4,6 @@
 namespace App\Repositories\Token;
 
 
-use ErrorException;
 use Medoo\Medoo;
 use PDO;
 
@@ -29,12 +28,32 @@ class MySQLTokenRepository implements TokenRepository
 
     public function checkToken(string $request): bool
     {
-        return $this->database->has("tokens", ["code" => $request, "time[>]" => time()]);
+        return $this->database->has("tokens", ["code" => $request]);
+    }
+
+    public function deleteOldToken(): void
+    {
+        $this->database->delete("tokens", ["time[<]" => time()]);
     }
 
     public function addToken(array $request): void
     {
         [$code, $token] = $request;
-        $this->database->insert("tokens", ["code" => $code, "token" => $token, "time" => time() + 900]);
+        $this->database->insert("tokens", ["code" => $code, "token" => $token, "time" => time() + 300]);
+    }
+
+    public function getToken(string $request): string
+    {
+        return $this->database->get("tokens", "token", ["code" => $request]);
+    }
+
+    public function verifyToken(string $request): bool
+    {
+        return $this->database->has("tokens", ["token" => $request]);
+    }
+
+    public function getId(string $request): ?string
+    {
+        return $this->database->get("tokens", "code", ["token" => $request]);
     }
 }

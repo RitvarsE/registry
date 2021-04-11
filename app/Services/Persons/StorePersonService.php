@@ -53,8 +53,45 @@ class StorePersonService
     {
         return $this->personsRepository->printAllPersons();
     }
-    public function addToken(string $request, string $token): void
+    public function validID(string $id): bool
     {
-        $this->personsRepository->addToken($request, $token);
+        $splitId = explode('-', $id);
+        if (ctype_digit($id) && strlen($id) === 11) {
+            return true;
+        }
+
+        if
+        (isset($splitId[1])
+            && ctype_digit($splitId[0])
+            && ctype_digit($splitId[1])
+            && strlen($splitId[0]) === 6
+            && strlen($splitId[1]) === 5) {
+            return true;
+        }
+        return false;
     }
+
+    public function validAge(string $age): bool
+    {
+        return ctype_digit($age) && $age > 0 && $age < 123;
+    }
+
+    public function validName(string $name): bool
+    {
+        $splitName = explode(' ', $name);
+        return isset($splitName[1])
+            && !isset($splitName[2])
+            && preg_match('/^\p{Latin}+$/u', $splitName[0])
+            && preg_match('/^\p{Latin}+$/u', $splitName[1]);
+
+    }
+
+    public function validateID(string $id): string
+    {
+        if (strpos($id, '-')) {
+            return str_replace('-', '', $id);
+        }
+        return $id;
+    }
+
 }
